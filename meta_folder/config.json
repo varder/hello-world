@@ -1,0 +1,22 @@
+{
+  "configuration": {
+    "private_key": "private_key.pem",
+    "certificate": "sp-client.pem",
+    "remove_non_regular_files": true
+  },
+  "meta": {
+    "application": {
+      "attrs": {
+        "application_id": "App_ID",
+        "application_version": "0.0.1"
+      },
+      "command": [
+        "python3", "vis_client_example.py"
+      ]
+    }
+  },
+  "quotas": {
+    "cpu_limit": 50,
+    "memory_limit": 1000
+  }
+}
