@@ -18,9 +18,6 @@ install:
   - mkdir package
 
 script:
-  - docker pull alekseibuziuma/aos_signer:1.0.0
-  - docker run -v $(pwd)/meta_folder:/data/meta/ -v $(pwd)/src/:/data/src/ -v $(pwd)/package:/data/package alekseibuziuma/aos_signer:1.0.0
+  - docker pull aoscloud/aos_signer:1.0.0
+  - docker run -v $(pwd)/meta_folder:/data/meta/ -v $(pwd)/src/:/data/src/ -v $(pwd)/package:/data/package aoscloud/aos_signer:1.0.0
   - curl --request POST -k -v --cacert meta_folder/rootCA.crt.pem --cert $SP_CERTIFICATE --key $PRIVATE_KEY --form "service=$SERVICE_UUID" --form "file=@package/service.tar.gz" $AOS_UPLOAD_SERVICE_URL
-
-
-
