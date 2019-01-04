@@ -17,7 +17,6 @@ import time
 import logging
 
 import requests
-from requests.compat import urljoin
 
 from aos_vis_client import VISClient, VISDataSubscription, VISDataAccessor
 
@@ -32,8 +31,6 @@ HTTP_REQUEST_RECEIVER_URL = "<replace with your url>"
 DATA_SENDING_DELAY = 2
 WAIT_TIMEOUT = 5
 DELAY_AFTER_ERROR = 2
-
-TELEMETRY_RECEIVER_URL = urljoin(HTTP_REQUEST_RECEIVER_URL, "telemetry")
 
 
 def main():
@@ -52,9 +49,9 @@ def main():
         # Send information received from VIS to HTTP server.
         while True:
             try:
-                logger.info("Sending telemetry to '{url}'".format(url=TELEMETRY_RECEIVER_URL))
+                logger.info("Sending telemetry to '{url}'".format(url=HTTP_REQUEST_RECEIVER_URL))
                 requests.post(
-                    url=TELEMETRY_RECEIVER_URL,
+                    url=HTTP_REQUEST_RECEIVER_URL,
                     json={"vin": vin, "telemetry": telemetry_sub.get_value(wait_timeout=WAIT_TIMEOUT)}
                 )
 
