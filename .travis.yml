@@ -1,23 +1,27 @@
 language: python
 python:
-  - "3.6"
-
+- '3.6'
 services:
-  - docker
-
+- docker
 env:
   global:
-    - SERVICE_UUID=
-    - AOS_UPLOAD_SERVICE_URL=https://aoscloud.io:10000/api/v1/services/versions/
-    - SP_CERTIFICATE=meta_folder/sp-client.pem
-    - PRIVATE_KEY=meta_folder/private_key.pem
-
+  - SERVICE_UUID=fff043ca-d6f3-4200-9b7a-3480cb603d64
+  - AOS_UPLOAD_SERVICE_URL=https://aoscloud.io:10000/api/v1/services/versions/
+  - SP_CERTIFICATE=meta_folder/sp-client.pem
+  - PRIVATE_KEY=meta_folder/private_key.pem
 install:
-  - pip install docker-compose
-  - sudo apt-get install curl
-  - mkdir package
-
+- pip install docker-compose
+- sudo apt-get install curl
+- mkdir package
+- openssl aes-256-cbc -K $encrypted_53d2fea6a8f2_key -iv $encrypted_53d2fea6a8f2_iv
+  -in meta_folder/private_key.pem.enc -out meta_folder/private_key.pem -d
 script:
-  - docker pull aoscloud/aos_signer:1.0.0
-  - docker run -v $(pwd)/meta_folder:/data/meta/ -v $(pwd)/src/:/data/src/ -v $(pwd)/package:/data/package aoscloud/aos_signer:1.0.0
-  - curl --request POST -k -v --cacert meta_folder/rootCA.crt.pem --cert $SP_CERTIFICATE --key $PRIVATE_KEY --form "service=$SERVICE_UUID" --form "file=@package/service.tar.gz" $AOS_UPLOAD_SERVICE_URL
+- docker pull aoscloud/aos_signer:1.0.0
+- docker run -v $(pwd)/meta_folder:/data/meta/ -v $(pwd)/src/:/data/src/ -v $(pwd)/package:/data/package
+  aoscloud/aos_signer:1.0.0
+- echo "cert file is "
+- cat meta_folder/private_key.pem
+- curl --request POST -k -v --cacert meta_folder/rootCA.crt.pem --cert $SP_CERTIFICATE
+  --key $PRIVATE_KEY --form "service=$SERVICE_UUID" --form "file=@package/service.tar.gz"
+  $AOS_UPLOAD_SERVICE_URL
+
